@@ -32,10 +32,18 @@
             { nome: "Pedro", telefone: "988332134" },
             { nome: "Rafaela", telefone: "34523433" },
           ];
-            $scope.adicionarContato = function (){
-               $scope.contatos.push({nome: $scope.nome, telefone: $scope.telefone});
+            // $scope.adicionarContato = function (){
+            //    $scope.contatos.push({nome: $scope.nome, telefone: $scope.telefone}); ela quebra o mantra e ruim, evitar o maximo o scoper ficar dentrro do contrroler
                 // console.log($scope.nome);
 
+            // }
+            // $scope.adicionarContato = function(nome, telefone){
+                // $scope.contatos.push({nome:nome, telefone:telefone});
+            // }
+
+            $scope.adicionarContato = function(contato){
+                $scope.contatos.push(angular.copy(contato));
+                delete $scope.contato
             }
 
           //$scope.devsad = "shulambs"; controller $scope.app->scope->view
@@ -49,7 +57,7 @@
 
             //ng-click atribui um comportamento a um evento. 
 
-
+            // 26:20 resumo do funcionamento
 
         });
     </script>
@@ -73,12 +81,15 @@
         </tr>
       </table>
       <hr/>
-      <input class="form-control" type="text" ng-model="nome" placeholder="Nome"/>
-      <input class="form-control" type="text" ng-model="telefone" placeholder="Telefone"/>
+      <input class="form-control" type="text" ng-model="contato.nome" placeholder="Nome"/>
+      <input class="form-control" type="text" ng-model="contato.telefone" placeholder="Telefone"/>
       <!-- {{nome}} -->
       <!-- {{telefone}} -->
       <!-- {{contatos}} -->
-      <button class="btn btn-primary btn-block"  ng-click="adicionarContato()">Adicionar Contato</button>
+      <!-- <button class="btn btn-primary btn-block"  ng-click="adicionarContato(nome, telefone)">Adicionar Contato</button> -->
+      <button class="btn btn-primary btn-block"  ng-click="adicionarContato(contato)">Adicionar Contato</button>
+      {{contato}}
+      <!-- <button class="btn btn-primary btn-block"  ng-click="adicionarContato()">Adicionar Contato</button> -->
     </div>
   </body>
 </html>
