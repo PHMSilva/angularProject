@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pt-br" ng-app="listaTelefonica">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lista telefonica</title>
+    <link rel="stylesheet" type="text/css" href="lib/bootstrap/bootstrap.css" />
+    <style>
+      .jumbotron {
+        width: 400px;
+        text-align: center;
+        margin-top: 20px;
+        margin-right: auto;
+        margin-left: auto;
+      }
+      .table {
+        margin-top: 20px;
+      }
+      .form-control {
+        margin-bottom: 5px;
+      }
+    </style>
+    <script src="lib/angular/angular.js"></script>
+    <script>
+      angular.module("listaTelefonica", []);
+      angular
+        .module("listaTelefonica")
+        .controller("listaTelefonicaCtrl", function ($scope) {
+          $scope.app = "Lista Telefonica";
+          $scope.contatos = [
+            { nome: "Pedro", telefone: "988332134" },
+            { nome: "Rafaela", telefone: "34523433" },
+          ];
+          // $scope.adicionarContato = function (){
+          //    $scope.contatos.push({nome: $scope.nome, telefone: $scope.telefone}); ela quebra o mantra e ruim, evitar o maximo o scoper ficar dentrro do contrroler
+          // console.log($scope.nome);
+
+          // }
+          // $scope.adicionarContato = function(nome, telefone){
+          // $scope.contatos.push({nome:nome, telefone:telefone});
+          // }
+          $scope.operadoras = [
+            { nome: "Oi", codigo: 14 },
+            { nome: "Tim", codigo: 41 },
+            { nome: "Vivo", codigo: 15 },
+          ];
+          $scope.adicionarContato = function (contato) {
+            $scope.contatos.push(angular.copy(contato));
+            delete $scope.contato;
+          };
+
+          //$scope.devsad = "shulambs"; controller $scope.app->scope->view
+          //ng-bind pega algo do escopo e exibe na view o ng-model pega o
+          //da view e passa para o escopo , no ngModel se aplica mais nos
+          // inputs, selects e nos textARRAYS.
+
+          // framework tem um compilador que pecorre  os elementos que tem direitivas
+          // onde tem o ng-model ele começa a escutar, entao ele define e atualiza a propriedade scope
+          // ativa os ciclos de notificacao;
+
+          //ng-click atribui um comportamento a um evento.
+
+          // 26:20 resumo do funcionamento
+        });
+    </script>
+  </head>
+  <!-- ctrl + ;  para comentar -->
+  <body ng-controller="listaTelefonicaCtrl">
+    <div class="jumbotron">
+      <!-- <h4 ng-bind="app"></h4> outra forma de chamar o scope.app ngBind: substitui o objeto por expressao
+    ngRepeat interacao de arrays e objetos -->
+      <h3>{{app}}</h3>
+      <!-- <h4>{{app}}</h4> -->
+      <table class="table table-striped">
+        <tr>
+          <th>Nome</th>
+          <th>Telefone</th>
+          <th>Operadora</th>
+        </tr>
+        <tr ng-repeat="contato in contatos">
+          <td>{{contato.nome}}</td>
+          <td>{{contato.telefone}}</td>
+          <td>{{contato.operadora.nome}}</td>
+          <!-- 12:57<td ng-repeat="(key,value) in contato">{{key +' - '+ value}}</td> -->
+        </tr>
+      </table>
+      <hr />
+
+      <input
+        class="form-control"
+        type="text"
+        ng-model="contato.nome"
+        placeholder="Nome"
+      />
+      <input
+        class="form-control"
+        type="text"
+        ng-model="contato.telefone"
+        placeholder="Telefone"
+      />
+      <select
+        class="form-control"
+        ng-model="contato.operadora"
+        ng-options="operadora.nome for operadora in operadoras"
+      >
+        <option value="">Selecione uma operadora</option>
+      </select>
+
+      <!-- {{nome}} -->
+      <!-- {{telefone}} -->
+      <!-- {{contatos}} -->
+      <!-- <button class="btn btn-primary btn-block"  ng-click="adicionarContato(nome, telefone)">Adicionar Contato</button> -->
+      <button
+        class="btn btn-primary btn-block"
+        ng-click="adicionarContato(contato)"
+        ng-disabled="!contato.nome || !contato.telefone"
+      >
+        Adicionar Contato
+      </button>
+      <!-- {{contato}} -->
+      <!-- <button class="btn btn-primary btn-block"  ng-click="adicionarContato()">Adicionar Contato</button> -->
+    </div>
+    {{contato}}
+  </body>
+</html>
+
+<!-- 3direitivas sao extensoes da linguagem html que permite implementar novos comportamentos -->
+<!-- 3ngDisabled desabilitando um elemento dinamicamente -->
+<!-- 3ngOptions realiza as opcoes de um select -->
