@@ -8,7 +8,7 @@
     <link rel="stylesheet" type="text/css" href="lib/bootstrap/bootstrap.css" />
     <style>
       .jumbotron {
-        width: 400px;
+        width: 800px;
         text-align: center;
         margin-top: 20px;
         margin-right: auto;
@@ -20,6 +20,12 @@
       .form-control {
         margin-bottom: 5px;
       }
+      .selecionado {
+        background-color: yellow;
+      }
+      .negrito {
+        font-weight: bold;
+      }
     </style>
     <script src="lib/angular/angular.js"></script>
     <script>
@@ -29,8 +35,10 @@
         .controller("listaTelefonicaCtrl", function ($scope) {
           $scope.app = "Lista Telefonica";
           $scope.contatos = [
-            { nome: "Pedro", telefone: "988332134" },
-            { nome: "Rafaela", telefone: "34523433" },
+            { nome: "Pedro", telefone: "988332134", operadora: "oi",cor:"blue" },
+            { nome: "Rafaela", telefone: "34523433", operadora: "tim", cor:"orange"},
+            { nome: "Lucas", telefone: "3456663", operadora: "vivo", cor:"green"},
+            { nome: "Ana", telefone: "93443534", operadora: "tim", cor:"purple" },
           ];
           // $scope.adicionarContato = function (){
           //    $scope.contatos.push({nome: $scope.nome, telefone: $scope.telefone}); ela quebra o mantra e ruim, evitar o maximo o scoper ficar dentrro do contrroler
@@ -41,14 +49,28 @@
           // $scope.contatos.push({nome:nome, telefone:telefone});
           // }
           $scope.operadoras = [
-            { nome: "Oi", codigo: 14 },
-            { nome: "Tim", codigo: 41 },
-            { nome: "Vivo", codigo: 15 },
+            { nome: "Oi", codigo: 14, categoria: "Celular" },
+            { nome: "Vivo", codigo: 15, categoria: "Celular" },
+            { nome: "Tim", codigo: 41, categoria: "Celular" },
+            { nome: "GVT", codigo: 25, categoria: "Fixo" },
+            { nome: "Embratel", codigo: 21, categoria: "Fixo" },
           ];
           $scope.adicionarContato = function (contato) {
             $scope.contatos.push(angular.copy(contato));
             delete $scope.contato;
           };
+          $scope.apagarContatos = function (contatos) {
+            $scope.contatos = contatos.filter(function (contato) {
+              if (!contato.selecionado) return contato;
+            });
+          };
+          $scope.isContatoSelecionado = function (contatos){
+            return contatos.some(function(contato){
+                return contato.selecionado;
+            });
+          };
+          // $scope.classe1 = "selecionado";
+          // $scope.classe2= "negrito";
 
           //$scope.devsad = "shulambs"; controller $scope.app->scope->view
           //ng-bind pega algo do escopo e exibe na view o ng-model pega o
@@ -70,19 +92,29 @@
     <div class="jumbotron">
       <!-- <h4 ng-bind="app"></h4> outra forma de chamar o scope.app ngBind: substitui o objeto por expressao
     ngRepeat interacao de arrays e objetos -->
-      <h3>{{app}}</h3>
+      <h3>Lista telefônica</h3>
       <!-- <h4>{{app}}</h4> -->
-      <table class="table table-striped">
+      <!-- <table class="table table-striped"> -->
+      <table class="table">
         <tr>
+          <th></th>
           <th>Nome</th>
           <th>Telefone</th>
           <th>Operadora</th>
+          <th></th>
         </tr>
-        <tr ng-repeat="contato in contatos">
+        <tr
+        
+          ng-class="{'selecionado negrito': contato.selecionado}"
+          ng-repeat="contato in contatos"
+        >
+          <td><input type="checkbox" ng-model="contato.selecionado" /></td>
           <td>{{contato.nome}}</td>
           <td>{{contato.telefone}}</td>
           <td>{{contato.operadora.nome}}</td>
-          <!-- 12:57<td ng-repeat="(key,value) in contato">{{key +' - '+ value}}</td> -->
+          <td> <div style="width: 20px; height: 20px" ng-style=" {'background-color': contato.cor}"></div></td>
+          <!-- 12:57<td ng-repeat="(key,value) in contato">{{key +' - '+ value}}</td>   ng-style= "{'background-color':contato.cor}"-->
+          <!-- https://platform.linkedin.com/utag.js?_l=pt_BR linkedin   -->
         </tr>
       </table>
       <hr />
@@ -102,7 +134,7 @@
       <select
         class="form-control"
         ng-model="contato.operadora"
-        ng-options="operadora.nome for operadora in operadoras"
+        ng-options="operadora.nome group by operadora.categoria for operadora in operadoras"
       >
         <option value="">Selecione uma operadora</option>
       </select>
@@ -118,6 +150,34 @@
       >
         Adicionar Contato
       </button>
+      <!-- <button
+        class="btn btn-danger btn-block"
+        ng-click="apagarContatos(contatos)"
+        ng-disabled="!isContatoSelecionado(contatos)"
+      >
+        Apagar Contatos
+      </button> -->
+      <!-- <button
+        class="btn btn-danger btn-block"
+        ng-click="apagarContatos(contatos)"
+        ng-show="isContatoSelecionado(contatos)"
+      >
+        Apagar Contatos
+      </button> -->
+      <!-- <button
+        class="btn btn-danger btn-block"
+        ng-click="apagarContatos(contatos)"
+        ng-hide="!isContatoSelecionado(contatos)"
+      >
+        Apagar Contatos
+      </button> -->
+      <button
+        class="btn btn-danger btn-block"
+        ng-click="apagarContatos(contatos)"
+        ng-if="isContatoSelecionado(contatos)"
+      >
+        Apagar Contatos
+      </button>
       <!-- {{contato}} -->
       <!-- <button class="btn btn-primary btn-block"  ng-click="adicionarContato()">Adicionar Contato</button> -->
     </div>
@@ -128,3 +188,5 @@
 <!-- 3direitivas sao extensoes da linguagem html que permite implementar novos comportamentos -->
 <!-- 3ngDisabled desabilitando um elemento dinamicamente -->
 <!-- 3ngOptions realiza as opcoes de um select -->
+<!-- ngClass e ngStyle aplicando classes CSS e estilos dinamicamente  -->
+<!-- ngShow,ngHide e ngIf -->
