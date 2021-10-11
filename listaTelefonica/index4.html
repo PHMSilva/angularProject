@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="pt-br" ng-app="listaTelefonica">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lista telefonica</title>
+    <link rel="stylesheet" type="text/css" href="lib/bootstrap/bootstrap.css" />
+    <style>
+      .jumbotron {
+        width: 800px;
+        text-align: center;
+        margin-top: 20px;
+        margin-right: auto;
+        margin-left: auto;
+      }
+      .table {
+        margin-top: 20px;
+      }
+      .form-control {
+        margin-bottom: 5px;
+      }
+      .selecionado {
+        background-color: yellow;
+      }
+      .negrito {
+        font-weight: bold;
+      }
+    </style>
+    <script src="lib/angular/angular.js"></script>
+    <script>
+      angular.module("listaTelefonica", []);
+      angular
+        .module("listaTelefonica")
+        .controller("listaTelefonicaCtrl", function ($scope) {
+          $scope.app = "Lista Telefonica";
+          $scope.contatos = [
+            {
+              nome: "Pedro",
+              telefone: "988332134",
+              operadora: "oi",
+              cor: "blue",
+            },
+            {
+              nome: "Rafaela",
+              telefone: "34523433",
+              operadora: "tim",
+              cor: "orange",
+            },
+            {
+              nome: "Lucas",
+              telefone: "3456663",
+              operadora: "vivo",
+              cor: "green",
+            },
+            {
+              nome: "Ana",
+              telefone: "93443534",
+              operadora: "tim",
+              cor: "purple",
+            },
+          ];
+          // $scope.adicionarContato = function (){
+          //    $scope.contatos.push({nome: $scope.nome, telefone: $scope.telefone}); ela quebra o mantra e ruim, evitar o maximo o scoper ficar dentrro do contrroler
+          // console.log($scope.nome);
+
+          // }
+          // $scope.adicionarContato = function(nome, telefone){
+          // $scope.contatos.push({nome:nome, telefone:telefone});
+          // }
+          $scope.operadoras = [
+            { nome: "Oi", codigo: 14, categoria: "Celular" },
+            { nome: "Vivo", codigo: 15, categoria: "Celular" },
+            { nome: "Tim", codigo: 41, categoria: "Celular" },
+            { nome: "GVT", codigo: 25, categoria: "Fixo" },
+            { nome: "Embratel", codigo: 21, categoria: "Fixo" },
+          ];
+          $scope.adicionarContato = function (contato) {
+            $scope.contatos.push(angular.copy(contato));
+            delete $scope.contato;
+            $scope.contatoForm.$setPristine();
+          };
+          $scope.apagarContatos = function (contatos) {
+            $scope.contatos = contatos.filter(function (contato) {
+              if (!contato.selecionado) return contato;
+            });
+          };
+          $scope.isContatoSelecionado = function (contatos) {
+            return contatos.some(function (contato) {
+              return contato.selecionado;
+            });
+          };
+          // $scope.classe1 = "selecionado";
+          // $scope.classe2= "negrito";
+
+          //$scope.devsad = "shulambs"; controller $scope.app->scope->view
+          //ng-bind pega algo do escopo e exibe na view o ng-model pega o
+          //da view e passa para o escopo , no ngModel se aplica mais nos
+          // inputs, selects e nos textARRAYS.
+
+          // framework tem um compilador que pecorre  os elementos que tem direitivas
+          // onde tem o ng-model ele começa a escutar, entao ele define e atualiza a propriedade scope
+          // ativa os ciclos de notificacao;
+
+          //ng-click atribui um comportamento a um evento.
+
+          // 26:20 resumo do funcionamento
+        });
+    </script>
+  </head>
+  <!-- ctrl + ;  para comentar -->
+  <body ng-controller="listaTelefonicaCtrl">
+    <div class="jumbotron">
+      <!-- <h4 ng-bind="app"></h4> outra forma de chamar o scope.app ngBind: substitui o objeto por expressao
+    ngRepeat interacao de arrays e objetos -->
+      <h3>Lista telefônica</h3>
+      <!-- <h4>{{app}}</h4> -->
+      <!-- <table class="table table-striped"> -->
+      <table class="table">
+        <tr>
+          <th></th>
+          <th>Nome</th>
+          <th>Telefone</th>
+          <th>Operadora</th>
+          <th></th>
+        </tr>
+        <tr
+          ng-class="{'selecionado negrito': contato.selecionado}"
+          ng-repeat="contato in contatos"
+        >
+          <td><input type="checkbox" ng-model="contato.selecionado" /></td>
+          <td>{{contato.nome}}</td>
+          <td>{{contato.telefone}}</td>
+          <td>{{contato.operadora}}</td>
+          <td>
+            <div
+              style="width: 20px; height: 20px"
+              ng-style=" {'background-color': contato.cor}"
+            ></div>
+          </td>
+          <!-- 12:57<td ng-repeat="(key,value) in contato">{{key +' - '+ value}}</td>   ng-style= "{'background-color':contato.cor}"-->
+          <!-- https://platform.linkedin.com/utag.js?_l=pt_BR linkedin   -->
+        </tr>
+      </table>
+      <hr />
+      É valido {{contatoForm.$valid}}<br />
+      É invalido {{contatoForm.$invalid}}<br />
+      <form name="contatoForm">
+        <input
+          class="form-control"
+          type="text"
+          ng-model="contato.nome"
+          name="nome"
+          placeholder="Nome"
+          ng-required="true"
+          ng-minlength="10"
+        />
+        <input
+          class="form-control"
+          type="text"
+          ng-model="contato.telefone"
+          name="telefone"
+          placeholder="Telefone"
+          ng-required="true"
+          ng-pattern="/^\d{4,5}-\d{4}$/"
+        />
+        <select
+          class="form-control"
+          ng-model="contato.operadora"
+          ng-options="operadora.nome as operadora.nome group by operadora.categoria for operadora in operadoras"
+        >
+          <option value="">Selecione uma operadora</option>
+        </select>
+      </form>
+      <div
+        ng-show="contatoForm.nome.$error.required && contatoForm.nome.$dirty"
+        class="alert alert-danger"
+      >
+        Por favor, preencha o campo nome !
+      </div>
+      <!-- <div
+        ng-show="contatoForm.nome.$invalid && contatoForm.nome.$dirty"
+        class="alert alert-danger"
+      >
+        O campo nome deve ter no mínimo 10 caracteres.
+      </div> -->
+      <!-- <div
+        ng-show="contatoForm.nome.$error.minlength && contatoForm.nome.$dirty"
+        class="alert alert-danger"
+      >
+        O campo nome deve ter no mínimo 10 caracteres.
+      </div> -->
+      <div
+        ng-show="contatoForm.nome.$error.minlength"
+        class="alert alert-danger"
+      >
+        O campo nome deve ter no mínimo 10 caracteres.
+      </div>
+      <div
+        ng-show="contatoForm.telefone.$invalid && contatoForm.telefone.$dirty"
+        class="alert alert-danger"
+      >
+        Por favor, preencha o campo telefone !
+      </div>
+      <!-- <div
+        ng-show="contatoForm.telefone.$error.pattern && contatoForm.telefone.$dirty"
+        class="alert alert-danger"
+      >
+        O campo telefone deve ter o formato DDDDD-DDDD.
+      </div> -->
+      <div
+      ng-show="contatoForm.telefone.$error.pattern"
+      class="alert alert-danger"
+    >
+      O campo telefone deve ter o formato DDDDD-DDDD.
+    </div>
+      <!-- {{nome}} -->
+      <!-- {{telefone}} -->
+      <!-- {{contatos}} -->
+      <!-- <button class="btn btn-primary btn-block"  ng-click="adicionarContato(nome, telefone)">Adicionar Contato</button> -->
+      <button
+        class="btn btn-primary btn-block"
+        ng-click="adicionarContato(contato)"
+        ng-disabled="contatoForm.$invalid"
+      >
+        Adicionar Contato
+      </button>
+
+      <button
+        class="btn btn-danger btn-block"
+        ng-click="apagarContatos(contatos)"
+        ng-if="isContatoSelecionado(contatos)"
+      >
+        Apagar Contatos
+      </button>
+      <!-- {{contato}} -->
+      <!-- <button class="btn btn-primary btn-block"  ng-click="adicionarContato()">Adicionar Contato</button> -->
+    </div>
+    <!-- {{contato}} -->
+  </body>
+</html>
+
+<!-- ngShow,ngHide e ngIf -->
+<!-- ngRequired : define um determinado campo como obrigatorio -->
+<!-- Aula 4 -->
+<!-- $valid e $invalid consultando a validade de um campo ou formulario -->
+<!-- $pristine e $dirty : verificando se um formulario ou campo já foi utilizado alguma vez -->
+<!-- mostra a o nome da operadora atraves da alteracao dos comandos dentro da string do ng-options 167 -->
+<!-- ngMinlength e ngMaxlength : define o tamanho minimo e o maximo permitido -->
+<!-- $error : consultando os erros  de um campo ou formulario, um objeto com estados de validade nos seus campos -->
+<!-- ngPattern : define uma RegExp para validar o campo -->
