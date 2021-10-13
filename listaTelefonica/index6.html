@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="pt-br" ng-app="listaTelefonica">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lista telefonica</title>
+    <link rel="stylesheet" type="text/css" href="lib/bootstrap/bootstrap.css" />
+    <style>
+      .jumbotron {
+        width: 800px;
+        text-align: center;
+        margin-top: 20px;
+        margin-right: auto;
+        margin-left: auto;
+      }
+      .table {
+        margin-top: 20px;
+      }
+      .form-control {
+        margin-bottom: 5px;
+      }
+      .selecionado {
+        background-color: yellow;
+      }
+      .negrito {
+        font-weight: bold;
+      }
+    </style>
+    <script src="lib/angular/angular.js"></script>
+    <script src="lib/angular/angular-locale-pt-br.js"></script>
+    <script src="lib/angular/angular-messages.js"></script>
+    <script>
+      angular.module("listaTelefonica", ["ngMessages"]);
+      angular
+        .module("listaTelefonica")
+        .controller("listaTelefonicaCtrl", function ($scope,limitToFilter, uppercaseFilter) {
+          $scope.app = "Lista Telefonica";
+          $scope.contatos = [
+            {
+              nome:  uppercaseFilter("Pedro"),
+              telefone: "988332134",
+              data: new Date(),
+              operadora: "oi",
+              cor: "blue",
+            },
+            {
+              nome: "Rafaela",
+              telefone: "34523433",
+              data: new Date(),
+              operadora: "tim",
+              cor: "orange",
+            },
+            {
+              nome: "Lucas",
+              telefone: "3456663",
+              data: new Date(),
+              operadora: "vivo",
+              cor: "green",
+            },
+            {
+              nome: "Ana",
+              telefone: "93443534",
+              data: new Date(),
+              operadora: "tim",
+              cor: "purple",
+            },
+          ];
+            
+
+
+
+
+          // $scope.adicionarContato = function (){
+          //    $scope.contatos.push({nome: $scope.nome, telefone: $scope.telefone}); ela quebra o mantra e ruim, evitar o maximo o scoper ficar dentrro do contrroler
+          // console.log($scope.nome);
+                // 23321, 25109, 23792 linhas documentacao angular
+
+          // }
+          // $scope.adicionarContato = function(nome, telefone){
+          // $scope.contatos.push({nome:nome, telefone:telefone});
+          // }
+          //   $scope.variavel = true;
+          $scope.operadoras = [
+            { nome: "Oi", codigo: 14, categoria: "Celular", preco: 0.34 },
+            { nome: "Vivo", codigo: 15, categoria: "Celular", preco: 1.34 },
+            { nome: "Tim", codigo: 41, categoria: "Celular", preco: 2.74 },
+            { nome: "GVT", codigo: 25, categoria: "Fixo", preco: 2.3 },
+            { nome: "Embratel", codigo: 21, categoria: "Fixo", preco: 2.3 },
+          ];
+          $scope.adicionarContato = function (contato) {
+            contato.data = new Date();
+            $scope.contatos.push(angular.copy(contato));
+            delete $scope.contato;
+            $scope.contatoForm.$setPristine();
+          };
+          $scope.apagarContatos = function (contatos) {
+            $scope.contatos = contatos.filter(function (contato) {
+              if (!contato.selecionado) return contato;
+            });
+          };
+          $scope.isContatoSelecionado = function (contatos) {
+            return contatos.some(function (contato) {
+              return contato.selecionado;
+            });
+          };
+          $scope.ordernarPor = function (campo) {
+            $scope.criterioDeOrdenacao = campo;
+            $scope.direcaoDaOrdenacao = !$scope.direcaoDaOrdenacao;
+          };
+
+          // $scope.classe1 = "selecionado";
+          // $scope.classe2= "negrito";
+
+          //$scope.devsad = "shulambs"; controller $scope.app->scope->view
+          //ng-bind pega algo do escopo e exibe na view o ng-model pega o
+          //da view e passa para o escopo , no ngModel se aplica mais nos
+          // inputs, selects e nos textARRAYS.
+
+          // framework tem um compilador que pecorre  os elementos que tem direitivas
+          // onde tem o ng-model ele começa a escutar, entao ele define e atualiza a propriedade scope
+          // ativa os ciclos de notificacao;
+
+          //ng-click atribui um comportamento a um evento.
+
+          // 26:20 resumo do funcionamento
+        });
+    </script>
+  </head>
+  <!-- ctrl + ;  para comentar -->
+  <body ng-controller="listaTelefonicaCtrl">
+    <div class="jumbotron">
+      <!-- <h4 ng-bind="app"></h4> outra forma de chamar o scope.app ngBind: substitui o objeto por expressao
+    ngRepeat interacao de arrays e objetos -->
+      <h3>Lista telefônica</h3>
+      <!-- <h4>{{app}}</h4> -->
+      <!-- <table class="table table-striped"> ctrl+d -->
+      <input
+        class="form-control"
+        type="text"
+        ng-model="criterioDeBusca"
+        placeholder="O que você esta buscando ?"
+      />
+      <table class="table">
+        <tr>
+          <th></th>
+          <th><a href="" ng-click="ordernarPor('nome')">Nome</a></th>
+          <th><a href="" ng-click="ordernarPor('telefone')">Telefone</a></th>
+          <th>Data</th>
+          <th>Operadora</th>
+          <!-- <th>Preco</th> -->
+          <!-- <th></th> -->
+        </tr>
+        <!-- <tr
+          ng-class="{'selecionado negrito': contato.selecionado}"
+          ng-repeat="contato in contatos | filter:criterioDeBusca|orderBy:criterioDeOrdenacao:direcaoDaOrdenacao|limitTo:3"
+        > -->
+        <!-- <tr
+          ng-class="{'selecionado negrito': contato.selecionado}"
+          ng-repeat="contato in contatos | filter:criterioDeBusca|orderBy:criterioDeOrdenacao:direcaoDaOrdenacao|limitTo:2"
+        > -->
+        <tr
+          ng-class="{'selecionado negrito': contato.selecionado}"
+          ng-repeat="contato in contatos|limitTo:2|filter:criterioDeBusca|orderBy:criterioDeOrdenacao:direcaoDaOrdenacao"
+        >
+          <!-- ordenacao descendente  <tr
+          ng-class="{'selecionado negrito': contato.selecionado}"
+          ng-repeat="contato in contatos | filter: {nome:criterioDeBusca}|orderBy:'-nome' "
+        > -->
+          <td><input type="checkbox" ng-model="contato.selecionado" /></td>
+          <!-- <td>{{contato.nome | uppercase | limitTo:3}}</td> -->
+          <!-- <td>{{contato.nome | uppercase}}</td> -->
+          <td>{{contato.nome}}</td>
+          <td>{{contato.telefone}}</td>
+          <td>{{contato.data | date:'EEEE dd/MM/yyyy HH:mm'}}</td>
+          <td>{{contato.operadora | lowercase}}</td>
+          <!-- <td>{{contato.preco}}</td> -->
+          <td>
+            <div
+              style="width: 20px; height: 20px"
+              ng-style=" {'background-color': contato.cor}"
+            ></div>
+          </td>
+          <!-- 12:57<td ng-repeat="(key,value) in contato">{{key +' - '+ value}}</td>   ng-style= "{'background-color':contato.cor}"-->
+          <!-- https://platform.linkedin.com/utag.js?_l=pt_BR linkedin   -->
+        </tr>
+      </table>
+      <hr />
+      É valido {{contatoForm.$valid}}<br />
+      É invalido {{contatoForm.$invalid}}<br />
+      <form name="contatoForm">
+        <input
+          class="form-control"
+          type="text"
+          ng-model="contato.nome"
+          name="nome"
+          placeholder="Nome"
+          ng-required="true"
+          ng-minlength="10"
+        />
+        <input
+          class="form-control"
+          type="text"
+          ng-model="contato.telefone"
+          name="telefone"
+          placeholder="Telefone"
+          ng-required="true"
+          ng-pattern="/^\d{4,5}-\d{4}$/"
+        />
+        <select
+          class="form-control"
+          ng-model="contato.operadora"
+          ng-options="operadora.nome as operadora.nome + ' (' +(operadora.preco | currency)+ ')' group by operadora.categoria for operadora in operadoras | orderBy: 'nome' "
+        >
+          <option value="">Selecione uma operadora</option>
+        </select>
+      </form>
+      <div ng-messages="contatoForm.nome.$error">
+        <div ng-message="required" ng-show="$dirty" class="alert alert-danger">
+          Por favor, preencha o campo nome !
+        </div>
+
+        <div ng-message="minlength" class="alert alert-danger">
+          O campo nome deve ter no mínimo 10 caracteres.
+        </div>
+      </div>
+      <div
+        ng-show="contatoForm.telefone.$invalid && contatoForm.telefone.$dirty"
+        class="alert alert-danger"
+      >
+        Por favor, preencha o campo telefone !
+      </div>
+      <!-- <div
+        ng-show="contatoForm.telefone.$error.pattern && contatoForm.telefone.$dirty"
+        class="alert alert-danger"
+      >
+        O campo telefone deve ter o formato DDDDD-DDDD.
+      </div> -->
+      <div
+        ng-show="contatoForm.telefone.$error.pattern"
+        class="alert alert-danger"
+      >
+        O campo telefone deve ter o formato DDDDD-DDDD.
+      </div>
+      <!-- {{nome}} -->
+      <!-- {{telefone}} -->
+      <!-- {{contatos}} -->
+      <!-- <button class="btn btn-primary btn-block"  ng-click="adicionarContato(nome, telefone)">Adicionar Contato</button> -->
+      <button
+        class="btn btn-primary btn-block"
+        ng-click="adicionarContato(contato)"
+        ng-disabled="contatoForm.$invalid"
+      >
+        Adicionar Contato
+      </button>
+
+      <button
+        class="btn btn-danger btn-block"
+        ng-click="apagarContatos(contatos)"
+        ng-if="isContatoSelecionado(contatos)"
+      >
+        Apagar Contatos
+      </button>
+      <!-- {{contato}} -->
+      <!-- <button class="btn btn-primary btn-block"  ng-click="adicionarContato()">Adicionar Contato</button> -->
+      <!-- {{100 | number:2}} -->
+      <!-- {{98.45 | number:1}} -->
+    </div>
+    <!-- {{contato}} -->
+    
+</body>
+</html>
+<!-- parte video 5: utilizacao de filtros para formatacao -->
+<!-- {{ 100 | number:2 }} -->

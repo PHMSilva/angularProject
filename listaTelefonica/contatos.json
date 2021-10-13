@@ -1,0 +1,32 @@
+[
+  {
+    "nome": "Bruno",
+    "telefone": "9999-2222",
+    "data": "2015-04-12T12:53:46.2048",
+    "operadora": {
+      "nome": "Oi",
+      "codigo": "31",
+      "categoria": "celular"
+    }
+  },
+  {
+    "nome": "Sandra",
+    "telefone": "9999-3333",
+    "data": "2015-04-12T12:53:46.2048",
+    "operadora": {
+      "nome": "Vivo",
+      "codigo": "15",
+      "categoria": "celular"
+    }
+  },
+  {
+    "nome": "Mariana",
+    "telefone": "9999-9999",
+    "data": "2015-04-12T12:53:46.2048",
+    "operadora": {
+      "nome": "Tim",
+      "codigo": "41",
+      "categoria": "celular"
+    }
+  }
+]
